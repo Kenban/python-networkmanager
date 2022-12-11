@@ -17,6 +17,9 @@ import warnings
 import weakref
 import xml.etree.ElementTree as etree
 
+from _dbus_glib_bindings import DBusGMainLoop
+
+
 class ObjectVanished(Exception):
     def __init__(self, obj):
         self.obj = obj
@@ -247,6 +250,7 @@ class NMDbusInterface(object):
         return super(NMDbusInterface, klass).__new__(klass)
 
     def __init__(self, object_path=None):
+        self.loop = None
         if isinstance(object_path, NMDbusInterface):
             object_path = object_path.object_path
         self.object_path = self.object_path or object_path
@@ -258,6 +262,8 @@ class NMDbusInterface(object):
     @property
     def proxy(self):
         if not self._proxy:
+            self.loop = DBusGMainLoop(set_as_default=True)
+            dbus.set_default_main_loop(self.loop)
             self._proxy = dbus.SystemBus().get_object(self.dbus_service, self.object_path, follow_name_owner_changes=True)
             self._proxy.created = time.time()
         elif self._proxy.created < self.last_disconnect:

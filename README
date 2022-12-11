@@ -1,7 +1,8 @@
 # python-networkmanager Easy communication with NetworkManager
 ============================================================
 
-# A fork of the python-networkmanager package after
+# A fork of the python-networkmanager package to fix this issue https://github.com/seveas/python-networkmanager/issues/93
+with NetworkManager >= 1.34 and other issues with D-Bus
 
 python-networkmanager wraps NetworkManagers D-Bus interface so you can be less
 verbose when talking to NetworkManager from python. All interfaces have been
